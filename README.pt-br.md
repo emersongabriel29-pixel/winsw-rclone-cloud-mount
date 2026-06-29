@@ -29,6 +29,12 @@ Isso permite executar o assistente local sem alterar permanentemente a politica 
 
 Antes de rodar qualquer script baixado da internet, revise os arquivos do projeto. O instalador pede administrador porque servicos do Windows exigem permissao elevada.
 
+## O PowerShell Fica Aberto?
+
+Nao. O PowerShell aparece apenas durante a instalacao, porque o assistente e interativo e pode precisar abrir o `rclone config`.
+
+Depois da instalacao, o mount roda pelo WinSW como servico do Windows. O processo do rclone fica em segundo plano, e nenhuma janela do PowerShell precisa continuar aberta para a unidade permanecer montada.
+
 ## Instalacao Rapida
 
 Baixe ou clone este repositorio e execute:
@@ -244,4 +250,3 @@ Nunca publique:
 - caminhos pessoais
 - XML gerado com caminhos reais
 - binarios baixados localmente
-

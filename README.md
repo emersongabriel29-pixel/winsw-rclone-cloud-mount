@@ -38,6 +38,12 @@ This is used so the local setup wizard can run without requiring a permanent sys
 
 Before running any script from the internet, review the files in this repository. The installer should be run from a trusted copy of the project, and it should only request administrator access because Windows services require elevated permissions.
 
+## Does PowerShell Stay Open?
+
+No. PowerShell is only used during setup because the installer is interactive and may need to open `rclone config`.
+
+After installation, the mount runs through WinSW as a Windows service. The rclone process runs in the background, and no PowerShell window needs to stay open for the drive to remain mounted.
+
 ## Quick Start
 
 Download or clone this repository, then double-click:
