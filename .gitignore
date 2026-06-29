@@ -1,0 +1,23 @@
+# Local service files
+RcloneService.xml
+*.xml
+!*.xml.example
+RcloneService.exe
+
+# rclone binaries and private config
+rclone/
+rclone.exe
+rclone.conf
+*.conf
+downloads/
+
+# Logs and cache
+logs/
+*.log
+*.log.old
+rclone-cache/
+tmp/
+
+# Windows noise
+Thumbs.db
+Desktop.ini

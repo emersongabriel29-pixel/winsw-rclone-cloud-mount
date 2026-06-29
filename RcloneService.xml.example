@@ -1,0 +1,18 @@
+<service>
+  <id>RcloneMountService</id>
+  <name>Rclone Cloud Mount</name>
+  <description>Mounts an rclone cloud remote as a Windows drive.</description>
+
+  <executable>C:\Tools\WinSW-Rclone\rclone\rclone.exe</executable>
+  <arguments>--config "%APPDATA%\rclone\rclone.conf" mount remote: R: --vfs-cache-mode full --cache-dir C:\rclone-cache --vfs-cache-max-size 120G --vfs-cache-max-age 7d --vfs-cache-poll-interval 30s --buffer-size 512M --vfs-read-ahead 2G --vfs-read-chunk-size 256M --vfs-read-chunk-size-limit 4G --dir-cache-time 720h --poll-interval 30s --timeout 2h --contimeout 30s --retries 15 --low-level-retries 30 --multi-thread-streams 8 --transfers 12 --checkers 32 --tpslimit 100 --tpslimit-burst 24 --fast-list --no-modtime --network-mode --links --log-level ERROR</arguments>
+
+  <log mode="roll" />
+  <logpath>C:\Tools\WinSW-Rclone\logs</logpath>
+
+  <depend>Tcpip</depend>
+  <depend>Dnscache</depend>
+  <depend>LanmanWorkstation</depend>
+
+  <startmode>Automatic</startmode>
+  <delayedAutoStart>true</delayedAutoStart>
+</service>
