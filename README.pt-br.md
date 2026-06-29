@@ -35,6 +35,34 @@ Nao. O PowerShell aparece apenas durante a instalacao, porque o assistente e int
 
 Depois da instalacao, o mount roda pelo WinSW como servico do Windows. O processo do rclone fica em segundo plano, e nenhuma janela do PowerShell precisa continuar aberta para a unidade permanecer montada.
 
+Na inicializacao do Windows, o servico sobe de forma silenciosa em segundo plano:
+
+```xml
+<startmode>Automatic</startmode>
+<delayedAutoStart>true</delayedAutoStart>
+```
+
+O servico do Windows nao abre uma janela visivel do PowerShell ou do CMD a cada boot. O WinSW inicia o `rclone.exe` diretamente como processo de servico, por isso a unidade pode continuar montada enquanto voce joga ou usa o PC sem uma janela de terminal aparecendo na tela.
+
+## PowerShell Ou CMD?
+
+Da para usar os dois, mas para coisas diferentes:
+
+- `Install-WinSW-Rclone.cmd` e apenas um launcher de dois cliques.
+- O assistente de instalacao e PowerShell porque ele e melhor para baixar arquivos, gerar XML, verificar servicos e rodar diagnosticos.
+- Depois de instalado, nem PowerShell nem CMD precisam ficar abertos para manter o mount funcionando.
+- Na inicializacao do Windows, quem sobe o `rclone.exe` oculto e o WinSW como servico.
+
+O CMD tambem pode iniciar ou parar o servico manualmente:
+
+```cmd
+RcloneService.exe start
+RcloneService.exe stop
+RcloneService.exe restart
+```
+
+PowerShell fica reservado principalmente para instalacao, verificacao e diagnostico.
+
 ## Instalacao Rapida
 
 Baixe ou clone este repositorio e execute:

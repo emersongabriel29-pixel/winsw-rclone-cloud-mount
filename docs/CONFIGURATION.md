@@ -156,6 +156,19 @@ The verification checks:
 - drive letter is visible
 - recent logs are available
 
+## Hidden Startup Behavior
+
+The setup wizard uses PowerShell only during installation and verification.
+
+After installation, Windows starts the mount through WinSW:
+
+```xml
+<startmode>Automatic</startmode>
+<delayedAutoStart>true</delayedAutoStart>
+```
+
+WinSW starts `rclone.exe` directly as a Windows service. It does not need a visible PowerShell or CMD window at startup.
+
 ## Files That Must Not Be Published
 
 Never publish:

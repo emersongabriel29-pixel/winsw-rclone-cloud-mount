@@ -44,6 +44,34 @@ No. PowerShell is only used during setup because the installer is interactive an
 
 After installation, the mount runs through WinSW as a Windows service. The rclone process runs in the background, and no PowerShell window needs to stay open for the drive to remain mounted.
 
+At Windows startup, the service starts silently in the background:
+
+```xml
+<startmode>Automatic</startmode>
+<delayedAutoStart>true</delayedAutoStart>
+```
+
+The Windows service does not launch a visible PowerShell or CMD window on every boot. WinSW starts `rclone.exe` directly as a service process, which is why the drive can stay mounted while you play or use the PC without a terminal window on screen.
+
+## PowerShell Or CMD?
+
+Both can be used as launchers, but they are used for different jobs:
+
+- `Install-WinSW-Rclone.cmd` is a small double-click launcher.
+- The setup wizard itself is PowerShell because it is better for downloading files, generating XML, checking services, and running verification.
+- After setup, neither PowerShell nor CMD is required to keep the mount alive.
+- At Windows startup, WinSW starts `rclone.exe` directly and hidden as a Windows service.
+
+CMD can start or stop the service manually:
+
+```cmd
+RcloneService.exe start
+RcloneService.exe stop
+RcloneService.exe restart
+```
+
+PowerShell is only preferred for the installer and diagnostic scripts.
+
 ## Quick Start
 
 Download or clone this repository, then double-click:
