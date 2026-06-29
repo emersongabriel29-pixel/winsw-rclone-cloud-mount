@@ -169,6 +169,12 @@ After installation, Windows starts the mount through WinSW:
 
 WinSW starts `rclone.exe` directly as a Windows service. It does not need a visible PowerShell or CMD window at startup.
 
+## Platform Scope
+
+This project targets Windows only.
+
+The automatic installer depends on Windows PowerShell and WinSW. Linux rclone mounts are possible, but they should use Linux-native service tooling such as systemd. Linux support is not included or tested in this project.
+
 ## Files That Must Not Be Published
 
 Never publish:

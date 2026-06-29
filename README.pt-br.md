@@ -50,6 +50,7 @@ Da para usar os dois, mas para coisas diferentes:
 
 - `Install-WinSW-Rclone.cmd` e apenas um launcher de dois cliques.
 - O assistente de instalacao e PowerShell porque ele e melhor para baixar arquivos, gerar XML, verificar servicos e rodar diagnosticos.
+- O instalador totalmente automatico requer Windows PowerShell.
 - Depois de instalado, nem PowerShell nem CMD precisam ficar abertos para manter o mount funcionando.
 - Na inicializacao do Windows, quem sobe o `rclone.exe` oculto e o WinSW como servico.
 
@@ -61,7 +62,13 @@ RcloneService.exe stop
 RcloneService.exe restart
 ```
 
-PowerShell fica reservado principalmente para instalacao, verificacao e diagnostico.
+PowerShell fica reservado principalmente para instalacao, verificacao e diagnostico. Fazer tudo somente pelo CMD e possivel de forma manual, baixando rclone e WinSW, copiando ou escrevendo o `RcloneService.xml`, e depois rodando `RcloneService.exe install` e `RcloneService.exe start`.
+
+## Linux
+
+Este projeto e somente para Windows por enquanto.
+
+O Linux tambem consegue rodar mounts do rclone, mas usa outra estrutura de servico, como systemd, em vez do WinSW. Suporte a Linux fica fora do escopo atual e nao foi testado aqui.
 
 ## Instalacao Rapida
 

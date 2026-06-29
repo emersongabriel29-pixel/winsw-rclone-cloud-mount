@@ -59,6 +59,7 @@ Both can be used as launchers, but they are used for different jobs:
 
 - `Install-WinSW-Rclone.cmd` is a small double-click launcher.
 - The setup wizard itself is PowerShell because it is better for downloading files, generating XML, checking services, and running verification.
+- The fully automatic installer requires Windows PowerShell.
 - After setup, neither PowerShell nor CMD is required to keep the mount alive.
 - At Windows startup, WinSW starts `rclone.exe` directly and hidden as a Windows service.
 
@@ -70,7 +71,13 @@ RcloneService.exe stop
 RcloneService.exe restart
 ```
 
-PowerShell is only preferred for the installer and diagnostic scripts.
+PowerShell is preferred for the installer and diagnostic scripts. CMD-only setup is possible manually if you download rclone and WinSW yourself, copy or write `RcloneService.xml`, then run `RcloneService.exe install` and `RcloneService.exe start`.
+
+## Linux Support
+
+This project is Windows-only for now.
+
+Linux can run rclone mounts, but it uses different service tooling, such as systemd, instead of WinSW. Linux support is outside the current project scope and has not been tested here.
 
 ## Quick Start
 
@@ -182,6 +189,7 @@ C:\Tools\WinSW-Rclone
 ## Requirements
 
 - Windows 10 or Windows 11.
+- Windows PowerShell, included by default on supported Windows versions.
 - Administrator access to install/start/stop a Windows service.
 - [rclone](https://rclone.org/downloads/).
 - [WinSW](https://github.com/winsw/winsw).
