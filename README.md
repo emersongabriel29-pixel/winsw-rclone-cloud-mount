@@ -20,6 +20,18 @@ This project is a sanitized installer/template for mounting any rclone-supported
 - Stores service logs in a local `logs` folder.
 - Uses a separate VFS cache directory for better read performance.
 
+## Security Notice
+
+The launcher uses:
+
+```text
+PowerShell -ExecutionPolicy Bypass
+```
+
+This is used so the local setup wizard can run without requiring a permanent system-wide PowerShell policy change.
+
+Before running any script from the internet, review the files in this repository. The installer should be run from a trusted copy of the project, and it should only request administrator access because Windows services require elevated permissions.
+
 ## Quick Start
 
 Download or clone this repository, then double-click:
@@ -38,6 +50,8 @@ The wizard asks for:
 - cache folder, default `C:\rclone-cache`
 - cache limit, default `120G`
 - rclone config path, default `%APPDATA%\rclone\rclone.conf`
+
+The default paths are examples, not requirements. You can change them in the wizard.
 
 If no rclone config exists yet, the wizard opens:
 
@@ -190,6 +204,8 @@ Example:
 <executable>C:\Tools\WinSW-Rclone\rclone\rclone.exe</executable>
 ```
 
+Paths in `RcloneService.xml.example` use `C:\Tools\...` only as a safe default example. If you choose a different service folder in the wizard, the generated `RcloneService.xml` will use your selected path.
+
 ## Manual Install
 
 Open PowerShell as Administrator inside the service folder:
@@ -302,6 +318,53 @@ It verifies:
 - Windows service status
 - mounted drive visibility
 - recent logs
+
+## Common Issues
+
+### The drive letter does not appear
+
+Run:
+
+```powershell
+.\scripts\verify-config.ps1
+```
+
+Then check whether the service is running and whether the selected drive letter is already in use.
+
+### rclone config opens but no remote is found
+
+Make sure the remote name created in `rclone config` exactly matches the remote name entered in the setup wizard. For example, `remote` and `remote:` refer to the same rclone remote, but the wizard asks for the name without the colon.
+
+### The service installs but fails to start
+
+Check:
+
+```powershell
+.\scripts\diagnose.ps1
+```
+
+Also verify that `rclone.exe`, `RcloneService.exe`, and `RcloneService.xml` exist in the selected service folder.
+
+### Downloads fail
+
+The wizard downloads rclone and WinSW from their official release locations. If the VM or network blocks downloads, download them manually from:
+
+```text
+https://rclone.org/downloads/
+https://github.com/winsw/winsw/releases
+```
+
+Then follow the manual setup section.
+
+### Cache fills the local disk
+
+Reduce:
+
+```text
+--vfs-cache-max-size
+```
+
+or choose a cache folder on a drive with more free space.
 
 ## Manage The Service
 
