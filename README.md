@@ -4,6 +4,12 @@ One-click style installer for running an rclone cloud mount as a Windows service
 
 This project is a sanitized installer/template for mounting any rclone-supported remote as a Windows drive letter, with VFS cache settings suitable for general files, backups, media libraries, and other large-file workflows.
 
+Portuguese documentation:
+
+```text
+README.pt-br.md
+```
+
 ## What It Does
 
 - Opens an elevated PowerShell setup wizard.
@@ -392,7 +398,7 @@ to at least the size of the largest file or game you expect to use heavily, with
 
 This project is not specific to Ryujinx, emulation, or game libraries. Those are optional use cases.
 
-For a separate guide focused on emulator folders and game directories, see:
+For a separate offline PDF guide focused on emulator folders and game directories, see:
 
 ```text
 output\pdf\WinSW-Rclone-Emulation-Guide.pdf
