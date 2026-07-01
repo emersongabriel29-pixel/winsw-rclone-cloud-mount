@@ -108,18 +108,35 @@ Ele abre um menu como administrador para tarefas comuns:
 
 ```text
 1  - Instalar ou reconfigurar servico
-2  - Verificar configuracao
-3  - Diagnosticar problema
-4  - Iniciar servico
-5  - Parar servico
-6  - Reiniciar servico
-7  - Recriar XML / alterar remote, unidade ou cache
-8  - Editar configuracoes do manager
-9  - Atualizar rclone
-10 - Atualizar WinSW
-11 - Abrir pasta de logs
-12 - Remover servico
+2  - Adicionar outra nuvem como disco
+3  - Verificar configuracao
+4  - Diagnosticar problema
+5  - Iniciar servico
+6  - Parar servico
+7  - Reiniciar servico
+8  - Recriar XML / alterar remote, unidade ou cache
+9  - Editar configuracoes do manager
+10 - Atualizar rclone
+11 - Atualizar WinSW
+12 - Abrir pasta de logs
+13 - Remover servico
 0  - Sair
+```
+
+A opcao "Adicionar outra nuvem como disco" cria outro servico WinSW separado para outro remote, por exemplo:
+
+```text
+Google Drive -> R:
+MEGA         -> M:
+OneDrive     -> O:
+```
+
+Ela pergunta o nome do remote, letra da unidade, pasta de cache e um perfil:
+
+```text
+leve   - menor uso de RAM e SSD
+medio  - equilibrado para testes e arquivos medios
+pesado - cache maior e leitura mais agressiva
 ```
 
 O manager salva preferencias locais em:

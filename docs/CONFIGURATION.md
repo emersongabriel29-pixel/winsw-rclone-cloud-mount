@@ -35,7 +35,28 @@ After the first setup, use the manager menu for maintenance:
 Manage-WinSW-Rclone.cmd
 ```
 
-The manager can verify the configuration, diagnose problems, start, stop or restart the service, update rclone or WinSW, open logs, edit local manager settings, and remove the service.
+The manager can verify the configuration, diagnose problems, start, stop or restart the service, update rclone or WinSW, open logs, edit local manager settings, add another cloud mount, and remove the service.
+
+To add another cloud as another drive, choose:
+
+```text
+2 - Add another cloud mount
+```
+
+That wizard creates a separate WinSW service and XML file. For example:
+
+```text
+gdrive: -> R: through RcloneGDrive
+mega:   -> M: through RcloneMega
+```
+
+It supports three mount profiles:
+
+```text
+leve   - lower RAM and disk usage
+medio  - balanced profile
+pesado - larger cache and more aggressive read settings
+```
 
 The manager stores local preferences in:
 
@@ -184,9 +205,10 @@ Manage-WinSW-Rclone.cmd
 Then use:
 
 ```text
-2 - Verify configuration
-3 - Diagnose problem
-11 - Open logs folder
+2  - Add another cloud mount
+3  - Verify configuration
+4  - Diagnose problem
+12 - Open logs folder
 ```
 
 Use start, stop and restart only when you intentionally want to change the service state.

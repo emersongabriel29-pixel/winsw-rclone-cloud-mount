@@ -259,18 +259,35 @@ It opens an elevated menu for common maintenance tasks:
 
 ```text
 1  - Install or reconfigure service
-2  - Verify configuration
-3  - Diagnose problem
-4  - Start service
-5  - Stop service
-6  - Restart service
-7  - Recreate XML / change remote, drive, or cache
-8  - Edit manager settings
-9  - Update rclone
-10 - Update WinSW
-11 - Open logs folder
-12 - Remove service
+2  - Add another cloud mount
+3  - Verify configuration
+4  - Diagnose problem
+5  - Start service
+6  - Stop service
+7  - Restart service
+8  - Recreate XML / change remote, drive, or cache
+9  - Edit manager settings
+10 - Update rclone
+11 - Update WinSW
+12 - Open logs folder
+13 - Remove service
 0  - Exit
+```
+
+The "Add another cloud mount" option creates a separate WinSW service for another remote, such as:
+
+```text
+Google Drive -> R:
+MEGA         -> M:
+OneDrive     -> O:
+```
+
+It asks for the remote name, drive letter, cache folder, and one of three profiles:
+
+```text
+leve   - lower RAM and disk usage
+medio  - balanced profile for testing and moderate files
+pesado - larger cache and more aggressive read settings
 ```
 
 The manager stores local preferences in:

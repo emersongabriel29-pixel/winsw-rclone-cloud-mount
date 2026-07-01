@@ -281,17 +281,18 @@ function Show-Menu {
     Write-Host "WinSW Rclone Cloud Mount Manager"
     Write-Host "================================"
     Write-Host "1  - Install or reconfigure service"
-    Write-Host "2  - Verify configuration"
-    Write-Host "3  - Diagnose problem"
-    Write-Host "4  - Start service"
-    Write-Host "5  - Stop service"
-    Write-Host "6  - Restart service"
-    Write-Host "7  - Recreate XML / change remote, drive, or cache"
-    Write-Host "8  - Edit manager settings"
-    Write-Host "9  - Update rclone"
-    Write-Host "10 - Update WinSW"
-    Write-Host "11 - Open logs folder"
-    Write-Host "12 - Remove service"
+    Write-Host "2  - Add another cloud mount"
+    Write-Host "3  - Verify configuration"
+    Write-Host "4  - Diagnose problem"
+    Write-Host "5  - Start service"
+    Write-Host "6  - Stop service"
+    Write-Host "7  - Restart service"
+    Write-Host "8  - Recreate XML / change remote, drive, or cache"
+    Write-Host "9  - Edit manager settings"
+    Write-Host "10 - Update rclone"
+    Write-Host "11 - Update WinSW"
+    Write-Host "12 - Open logs folder"
+    Write-Host "13 - Remove service"
     Write-Host "0  - Exit"
     Write-Host ""
     return Read-Host "Choose an option"
@@ -309,17 +310,18 @@ do {
     try {
         switch ($choice) {
             "1" { Invoke-ProjectScript -ScriptName "setup-wizard.ps1" }
-            "2" { Invoke-ProjectScript -ScriptName "verify-config.ps1" }
-            "3" { Invoke-ProjectScript -ScriptName "diagnose.ps1" }
-            "4" { Invoke-ServiceExe -Settings $settings -Action "start" }
-            "5" { Invoke-ServiceExe -Settings $settings -Action "stop" }
-            "6" { Invoke-ServiceExe -Settings $settings -Action "restart" }
-            "7" { Invoke-ProjectScript -ScriptName "setup-wizard.ps1" }
-            "8" { Edit-Settings }
-            "9" { Update-Rclone -Settings $settings }
-            "10" { Update-WinSW -Settings $settings }
-            "11" { Open-Logs -Settings $settings }
-            "12" { Invoke-ServiceExe -Settings $settings -Action "stop"; Invoke-ServiceExe -Settings $settings -Action "uninstall" }
+            "2" { Invoke-ProjectScript -ScriptName "add-mount.ps1" }
+            "3" { Invoke-ProjectScript -ScriptName "verify-config.ps1" }
+            "4" { Invoke-ProjectScript -ScriptName "diagnose.ps1" }
+            "5" { Invoke-ServiceExe -Settings $settings -Action "start" }
+            "6" { Invoke-ServiceExe -Settings $settings -Action "stop" }
+            "7" { Invoke-ServiceExe -Settings $settings -Action "restart" }
+            "8" { Invoke-ProjectScript -ScriptName "setup-wizard.ps1" }
+            "9" { Edit-Settings }
+            "10" { Update-Rclone -Settings $settings }
+            "11" { Update-WinSW -Settings $settings }
+            "12" { Open-Logs -Settings $settings }
+            "13" { Invoke-ServiceExe -Settings $settings -Action "stop"; Invoke-ServiceExe -Settings $settings -Action "uninstall" }
             "0" { break }
             default { Write-Host "Unknown option." }
         }
