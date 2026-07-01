@@ -29,6 +29,70 @@ function Invoke-Download {
     Invoke-WebRequest -Uri $Url -OutFile $OutFile -UseBasicParsing
 }
 
+function Test-WinFspInstalled {
+    $service = Get-Service -Name "WinFsp.Launcher" -ErrorAction SilentlyContinue
+    if ($service) {
+        return $true
+    }
+
+    $uninstallRoots = @(
+        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+        "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+    )
+
+    foreach ($root in $uninstallRoots) {
+        if (Test-Path -LiteralPath $root) {
+            $match = Get-ChildItem -LiteralPath $root -ErrorAction SilentlyContinue |
+                Get-ItemProperty -ErrorAction SilentlyContinue |
+                Where-Object { $_.DisplayName -like "WinFsp*" } |
+                Select-Object -First 1
+            if ($match) {
+                return $true
+            }
+        }
+    }
+
+    $paths = @(
+        (Join-Path ${env:ProgramFiles(x86)} "WinFsp\bin\winfsp-x64.dll"),
+        (Join-Path $env:ProgramFiles "WinFsp\bin\winfsp-x64.dll")
+    )
+
+    foreach ($path in $paths) {
+        if ($path -and (Test-Path -LiteralPath $path)) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function Convert-SizeToBytes {
+    param([Parameter(Mandatory = $true)][string]$Size)
+
+    if ($Size -notmatch '^\s*(\d+(?:\.\d+)?)\s*([KMGT]?)(?:i?B?)?\s*$') {
+        return $null
+    }
+
+    $number = [double]$matches[1]
+    $unit = $matches[2].ToUpperInvariant()
+    $multiplier = switch ($unit) {
+        "T" { 1TB }
+        "G" { 1GB }
+        "M" { 1MB }
+        "K" { 1KB }
+        default { 1 }
+    }
+
+    return [int64]($number * $multiplier)
+}
+
+function Test-DriveLetterInUse {
+    param([Parameter(Mandatory = $true)][string]$DriveLetter)
+
+    $name = $DriveLetter.TrimEnd(":")
+    return [bool](Get-PSDrive -Name $name -ErrorAction SilentlyContinue)
+}
+
 function Get-GitHubLatestAssetUrl {
     param(
         [Parameter(Mandatory = $true)][string]$Repo,
@@ -78,6 +142,13 @@ function Write-ServiceXml {
 
     $logDir = Join-Path $ServiceDir "logs"
     $xmlPath = Join-Path $ServiceDir "RcloneService.xml"
+    if (Test-Path -LiteralPath $xmlPath) {
+        $backupPath = "$xmlPath.backup-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+        Copy-Item -LiteralPath $xmlPath -Destination $backupPath -Force
+        Write-Host "Existing service XML backed up to:"
+        Write-Host $backupPath
+    }
+
     $mountTarget = "$($DriveLetter.TrimEnd(':')):"
     $args = @(
         "--config `"$ConfigPath`"",
@@ -156,10 +227,38 @@ $cacheDir = Read-Default -Prompt "Cache folder" -Default $defaultCacheDir
 $cacheMaxSize = Read-Default -Prompt "Maximum cache size" -Default "120G"
 $configPath = Read-Default -Prompt "Rclone config path" -Default $defaultConfigPath
 
+if (-not (Test-WinFspInstalled)) {
+    Write-Host ""
+    Write-Host "WinFsp was not detected. rclone mount on Windows requires WinFsp."
+    Write-Host "Install WinFsp from: https://winfsp.dev/rel/"
+    throw "WinFsp is required before installing the rclone mount service."
+}
+
+$existingService = Get-Service -Name "RcloneMountService" -ErrorAction SilentlyContinue
+if ((Test-DriveLetterInUse -DriveLetter $driveLetter) -and -not $existingService) {
+    throw "Drive letter '$driveLetter' is already in use. Choose another drive letter."
+}
+
 New-Item -ItemType Directory -Path $serviceDir -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $serviceDir "logs") -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $serviceDir "rclone") -Force | Out-Null
 New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null
+
+$cacheLimitBytes = Convert-SizeToBytes -Size $cacheMaxSize
+$cacheRoot = [IO.Path]::GetPathRoot((Resolve-Path -LiteralPath $cacheDir).Path)
+if ($cacheLimitBytes -and $cacheRoot) {
+    $cacheDrive = Get-PSDrive -Name $cacheRoot.TrimEnd(":\") -ErrorAction SilentlyContinue
+    if ($cacheDrive -and $cacheDrive.Free -lt $cacheLimitBytes) {
+        Write-Host ""
+        Write-Host "Warning: cache drive free space is lower than the requested cache limit."
+        Write-Host "Free: $([math]::Round($cacheDrive.Free / 1GB, 2)) GB"
+        Write-Host "Requested cache limit: $cacheMaxSize"
+        $continue = Read-Host "Continue anyway? [y/N]"
+        if ($continue -notin @("y", "Y", "yes", "YES")) {
+            throw "Installation canceled because cache free space is too low."
+        }
+    }
+}
 
 $downloadDir = Join-Path $serviceDir "downloads"
 New-Item -ItemType Directory -Path $downloadDir -Force | Out-Null
@@ -198,6 +297,13 @@ if ($remoteList -notcontains "$remoteName`:") {
     & $rcloneExe config --config $configPath
 }
 
+Write-Host ""
+Write-Host "Testing remote '$($remoteName):' before service installation..."
+& $rcloneExe lsd "$remoteName`:" --config $configPath --max-depth 1 1>$null
+if ($LASTEXITCODE -ne 0) {
+    throw "Remote test failed for '$($remoteName):'. Check the rclone config before installing the service."
+}
+
 $xmlPath = Write-ServiceXml `
     -ServiceDir $serviceDir `
     -RcloneExe $rcloneExe `
@@ -211,7 +317,6 @@ Write-Host ""
 Write-Host "Generated service config:"
 Write-Host $xmlPath
 
-$existingService = Get-Service -Name "RcloneMountService" -ErrorAction SilentlyContinue
 if ($existingService) {
     Write-Host "Existing service found. Restarting it with the new configuration."
     & $winswExe stop

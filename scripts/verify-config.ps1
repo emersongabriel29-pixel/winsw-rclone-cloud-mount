@@ -27,6 +27,43 @@ function Write-Check {
     }
 }
 
+function Test-WinFspInstalled {
+    $service = Get-Service -Name "WinFsp.Launcher" -ErrorAction SilentlyContinue
+    if ($service) {
+        return $true
+    }
+
+    $uninstallRoots = @(
+        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+        "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+    )
+
+    foreach ($root in $uninstallRoots) {
+        if (Test-Path -LiteralPath $root) {
+            $match = Get-ChildItem -LiteralPath $root -ErrorAction SilentlyContinue |
+                Get-ItemProperty -ErrorAction SilentlyContinue |
+                Where-Object { $_.DisplayName -like "WinFsp*" } |
+                Select-Object -First 1
+            if ($match) {
+                return $true
+            }
+        }
+    }
+
+    $paths = @(
+        (Join-Path ${env:ProgramFiles(x86)} "WinFsp\bin\winfsp-x64.dll"),
+        (Join-Path $env:ProgramFiles "WinFsp\bin\winfsp-x64.dll")
+    )
+
+    foreach ($path in $paths) {
+        if ($path -and (Test-Path -LiteralPath $path)) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
 $defaultServiceDir = "C:\Tools\WinSW-Rclone"
 $defaultConfigPath = Join-Path $env:APPDATA "rclone\rclone.conf"
 
@@ -52,6 +89,7 @@ Write-Check -Name "rclone executable" -Passed (Test-Path -LiteralPath $rcloneExe
 Write-Check -Name "Service XML" -Passed (Test-Path -LiteralPath $serviceXml) -Detail $serviceXml
 Write-Check -Name "rclone config" -Passed (Test-Path -LiteralPath $configPath) -Detail $configPath
 Write-Check -Name "Logs folder" -Passed (Test-Path -LiteralPath $logsDir) -Detail $logsDir
+Write-Check -Name "WinFsp installed" -Passed (Test-WinFspInstalled) -Detail "Required for rclone mount on Windows"
 
 if (Test-Path -LiteralPath $serviceXml) {
     [xml]$xml = Get-Content -LiteralPath $serviceXml
@@ -66,6 +104,10 @@ if (Test-Path -LiteralPath $serviceXml) {
 if ((Test-Path -LiteralPath $rcloneExe) -and (Test-Path -LiteralPath $configPath)) {
     $remotes = & $rcloneExe listremotes --config $configPath 2>$null
     Write-Check -Name "Remote exists" -Passed ($remotes -contains "$remoteName`:") -Detail "$remoteName`:"
+    if ($remotes -contains "$remoteName`:") {
+        & $rcloneExe lsd "$remoteName`:" --config $configPath --max-depth 1 1>$null 2>$null
+        Write-Check -Name "Remote responds" -Passed ($LASTEXITCODE -eq 0) -Detail "$remoteName`:"
+    }
 }
 
 $service = Get-Service -Name "RcloneMountService" -ErrorAction SilentlyContinue

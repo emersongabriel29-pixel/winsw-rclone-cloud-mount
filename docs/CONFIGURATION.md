@@ -18,6 +18,18 @@ The Google account is connected through the official `rclone config` login flow.
 
 This setup is generic. It can be used for documents, backups, media, project files, large archives, or game libraries. Emulation-specific guidance is kept in a separate PDF so the main installer is not tied to any emulator.
 
+## Windows Mount Requirement
+
+`rclone mount` on Windows requires WinFsp.
+
+Install it from:
+
+```text
+https://winfsp.dev/rel/
+```
+
+The setup wizard checks for WinFsp before installing the service. If WinFsp is missing, the installer stops with a clear message instead of creating a service that cannot mount a drive.
+
 ## Cloud Account Setup
 
 When the wizard asks for the remote name, choose a simple name such as:
@@ -147,9 +159,11 @@ The verification checks:
 - service folder exists
 - `RcloneService.exe` exists
 - `rclone.exe` exists
+- WinFsp is installed
 - `RcloneService.xml` exists
 - `rclone.conf` exists
 - selected remote exists in `rclone.conf`
+- selected remote responds to `rclone lsd`
 - cache folder exists
 - Windows service exists
 - Windows service is running

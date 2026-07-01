@@ -10,6 +10,13 @@ Portuguese documentation:
 README.pt-br.md
 ```
 
+Optional emulation and ROM/game directory guide:
+
+```text
+docs\EMULACAO-E-ROMS.md
+output\pdf\WinSW-Rclone-Emulation-Guide.pdf
+```
+
 ## What It Does
 
 - Opens an elevated PowerShell setup wizard.
@@ -191,17 +198,21 @@ C:\Tools\WinSW-Rclone
 - Windows 10 or Windows 11.
 - Windows PowerShell, included by default on supported Windows versions.
 - Administrator access to install/start/stop a Windows service.
+- [WinFsp](https://winfsp.dev/rel/), required by `rclone mount` on Windows.
 - [rclone](https://rclone.org/downloads/).
 - [WinSW](https://github.com/winsw/winsw).
 - A configured rclone remote, for example `remote`.
 
 Supported providers include anything supported by rclone, such as Google Drive, OneDrive, Dropbox, MEGA, Box, pCloud, S3-compatible storage, FTP, SFTP, WebDAV, SMB, and many others.
 
+The default mount options are tuned for large-file workflows such as media libraries, games, emulation libraries, ROM folders, backups, and other read-heavy use cases. For small documents only, the defaults may be more aggressive than necessary.
+
 Official external links:
 
 - rclone downloads: <https://rclone.org/downloads/>
 - rclone install docs: <https://rclone.org/install/>
 - rclone supported providers: <https://rclone.org/overview/>
+- WinFsp downloads: <https://winfsp.dev/rel/>
 - rclone GitHub releases: <https://github.com/rclone/rclone/releases>
 - WinSW project: <https://github.com/winsw/winsw>
 - WinSW releases: <https://github.com/winsw/winsw/releases>
@@ -393,6 +404,16 @@ Check:
 
 Also verify that `rclone.exe`, `RcloneService.exe`, and `RcloneService.xml` exist in the selected service folder.
 
+### The service runs but the drive does not mount
+
+Make sure WinFsp is installed:
+
+```text
+https://winfsp.dev/rel/
+```
+
+WinFsp is required for `rclone mount` on Windows. Without it, the service may start but no drive letter will appear.
+
 ### Downloads fail
 
 The wizard downloads rclone and WinSW from their official release locations. If the VM or network blocks downloads, download them manually from:
@@ -440,9 +461,10 @@ to at least the size of the largest file or game you expect to use heavily, with
 
 This project is not specific to Ryujinx, emulation, or game libraries. Those are optional use cases.
 
-For a separate offline PDF guide focused on emulator folders and game directories, see:
+For separate guides focused on emulator folders and game directories, see:
 
 ```text
+docs\EMULACAO-E-ROMS.md
 output\pdf\WinSW-Rclone-Emulation-Guide.pdf
 ```
 

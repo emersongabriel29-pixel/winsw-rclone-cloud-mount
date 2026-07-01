@@ -4,6 +4,13 @@ Instalador em estilo "dois cliques" para executar um mount do rclone como servic
 
 Este projeto e um template/instalador limpo para montar qualquer remoto suportado pelo rclone como uma letra de unidade no Windows, com cache VFS pensado para arquivos grandes, backups, midia e outros fluxos pesados de leitura.
 
+Guia opcional para emulacao, ROMs e diretorios de jogos:
+
+```text
+docs\EMULACAO-E-ROMS.md
+output\pdf\WinSW-Rclone-Emulation-Guide.pdf
+```
+
 ## O Que Ele Faz
 
 - Abre um assistente PowerShell com permissao de administrador.
@@ -122,12 +129,24 @@ Funciona com qualquer backend suportado pelo rclone, por exemplo:
 - SMB
 - outros
 
+As opcoes padrao de montagem sao ajustadas para arquivos grandes, bibliotecas de midia, jogos, emulacao, pastas de ROMs, backups e outros usos pesados de leitura. Para documentos pequenos, os padroes podem ser mais robustos do que o necessario.
+
 Links oficiais:
 
 - rclone downloads: <https://rclone.org/downloads/>
 - rclone install docs: <https://rclone.org/install/>
 - rclone supported providers: <https://rclone.org/overview/>
+- WinFsp downloads: <https://winfsp.dev/rel/>
 - WinSW releases: <https://github.com/winsw/winsw/releases>
+
+## Requisitos
+
+- Windows 10 ou Windows 11.
+- Windows PowerShell, incluido por padrao nas versoes suportadas do Windows.
+- Permissao de administrador para instalar/iniciar/parar servicos.
+- [WinFsp](https://winfsp.dev/rel/), necessario para `rclone mount` no Windows.
+- rclone, baixado automaticamente pelo instalador.
+- WinSW, baixado automaticamente pelo instalador.
 
 ## Estrutura Recomendada
 
@@ -251,6 +270,16 @@ Rode:
 
 Confira tambem se `rclone.exe`, `RcloneService.exe` e `RcloneService.xml` existem na pasta escolhida.
 
+### O servico roda mas a unidade nao monta
+
+Confira se o WinFsp esta instalado:
+
+```text
+https://winfsp.dev/rel/
+```
+
+O WinFsp e necessario para `rclone mount` no Windows. Sem ele, o servico pode iniciar, mas a letra da unidade nao aparece.
+
 ### O download falha
 
 Algumas VMs ou redes bloqueiam downloads. Nesse caso, baixe rclone e WinSW manualmente pelos links oficiais e siga a instalacao manual.
@@ -267,9 +296,10 @@ ou escolha uma pasta de cache em uma unidade com mais espaco livre.
 
 ## Guia Offline Em PDF
 
-Existe um guia opcional em PDF sobre uso com emuladores e diretorios de jogos:
+Existe um guia opcional sobre uso com emuladores e diretorios de jogos:
 
 ```text
+docs\EMULACAO-E-ROMS.md
 output\pdf\WinSW-Rclone-Emulation-Guide.pdf
 ```
 
