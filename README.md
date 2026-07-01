@@ -247,6 +247,44 @@ Or run the wizard directly from an elevated PowerShell:
 .\scripts\setup-wizard.ps1
 ```
 
+## Manager Menu
+
+After the first setup, you can use the PowerShell manager:
+
+```text
+Manage-WinSW-Rclone.cmd
+```
+
+It opens an elevated menu for common maintenance tasks:
+
+```text
+1  - Install or reconfigure service
+2  - Verify configuration
+3  - Diagnose problem
+4  - Start service
+5  - Stop service
+6  - Restart service
+7  - Recreate XML / change remote, drive, or cache
+8  - Edit manager settings
+9  - Update rclone
+10 - Update WinSW
+11 - Open logs folder
+12 - Remove service
+0  - Exit
+```
+
+The manager stores local preferences in:
+
+```text
+settings.json
+```
+
+That file is ignored by Git because it may contain personal paths. A safe template is available at:
+
+```text
+settings.example.json
+```
+
 ## Configure The Service
 
 Copy `RcloneService.xml.example` to `RcloneService.xml`, then edit:
@@ -445,6 +483,12 @@ or choose a cache folder on a drive with more free space.
 .\RcloneService.exe uninstall
 ```
 
+Or use the manager menu:
+
+```text
+Manage-WinSW-Rclone.cmd
+```
+
 ## Cache Size Notes
 
 This template uses `--vfs-cache-mode full`. That gives better compatibility for applications that expect normal disk behavior, but it uses local storage.
@@ -480,3 +524,15 @@ Never commit:
 - service XML files containing personal paths
 
 Use the `.example` files in this repository as clean templates.
+
+## Roadmap
+
+The current project is focused on a reliable Windows service installer and PowerShell manager.
+
+Possible future versions:
+
+- V3: simple Windows graphical interface.
+- V4: multiple mounts, one service per remote.
+- V5: polished installer, tray icon, notifications, import/export settings, and recovery tools.
+
+These are roadmap ideas. The current release stays focused on a single stable mount with clear verification and diagnostics.
