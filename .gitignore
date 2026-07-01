@@ -10,6 +10,7 @@ rclone.exe
 rclone.conf
 *.conf
 downloads/
+settings.json
 
 # Logs and cache
 logs/
