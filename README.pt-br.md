@@ -96,6 +96,44 @@ O assistente pergunta:
 
 Os caminhos padrao sao exemplos. Voce pode altera-los no assistente.
 
+## Menu De Gerenciamento
+
+Depois da primeira instalacao, voce pode usar o manager em PowerShell:
+
+```text
+Manage-WinSW-Rclone.cmd
+```
+
+Ele abre um menu como administrador para tarefas comuns:
+
+```text
+1  - Instalar ou reconfigurar servico
+2  - Verificar configuracao
+3  - Diagnosticar problema
+4  - Iniciar servico
+5  - Parar servico
+6  - Reiniciar servico
+7  - Recriar XML / alterar remote, unidade ou cache
+8  - Editar configuracoes do manager
+9  - Atualizar rclone
+10 - Atualizar WinSW
+11 - Abrir pasta de logs
+12 - Remover servico
+0  - Sair
+```
+
+O manager salva preferencias locais em:
+
+```text
+settings.json
+```
+
+Esse arquivo e ignorado pelo Git porque pode conter caminhos pessoais. O modelo seguro fica em:
+
+```text
+settings.example.json
+```
+
 ## Conta Da Nuvem
 
 Voce nao cola conta, senha, token ou OAuth manualmente neste projeto.
@@ -315,3 +353,15 @@ Nunca publique:
 - caminhos pessoais
 - XML gerado com caminhos reais
 - binarios baixados localmente
+
+## Roadmap
+
+O projeto atual foca em instalador confiavel para Windows e manager em PowerShell.
+
+Ideias futuras:
+
+- V3: aplicativo grafico simples para Windows.
+- V4: multiplas montagens, um servico por remote.
+- V5: instalador mais polido, icone na bandeja, notificacoes, importar/exportar configuracao e ferramentas de recuperacao.
+
+Essas ideias ficam como roadmap. A versao atual continua focada em uma montagem unica, estavel, com verificacao e diagnostico claros.
