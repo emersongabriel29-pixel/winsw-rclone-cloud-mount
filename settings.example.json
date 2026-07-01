@@ -1,0 +1,9 @@
+{
+  "ServiceDir": "C:\\Tools\\WinSW-Rclone",
+  "ServiceName": "RcloneMountService",
+  "RemoteName": "remote",
+  "DriveLetter": "R:",
+  "CacheDir": "C:\\rclone-cache",
+  "CacheMaxSize": "120G",
+  "ConfigPath": "%APPDATA%\\rclone\\rclone.conf"
+}
