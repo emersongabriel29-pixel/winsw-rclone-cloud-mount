@@ -147,6 +147,26 @@ No frontend, configure cada plataforma apontando para a pasta correspondente.
 7. Se houver stutter, teste uma copia local para comparar.
 8. Mantenha saves e shader cache fora do `R:`.
 
+## Usando O Manager
+
+Depois da instalacao, voce pode abrir:
+
+```text
+Manage-WinSW-Rclone.cmd
+```
+
+Use o menu para verificar a montagem antes de abrir o emulador:
+
+```text
+2 - Verificar configuracao
+3 - Diagnosticar problema
+11 - Abrir pasta de logs
+```
+
+Se a unidade `R:` nao aparecer, primeiro confirme no manager se o servico esta rodando, se o WinFsp foi detectado e se o remote responde. Evite reiniciar o servico durante uma partida ou enquanto um jogo ainda estiver aberto.
+
+O arquivo local `settings.json` pode apontar o manager para uma instalacao existente. Nao publique esse arquivo, porque ele pode conter caminhos do seu usuario.
+
 ## Observacao Legal
 
 Use apenas jogos, BIOS, firmware e arquivos que voce tem direito legal de usar. Este projeto apenas monta armazenamento remoto com rclone; ele nao fornece jogos, ROMs, BIOS, firmware ou keys.
@@ -158,4 +178,3 @@ Tambem existe um guia em PDF:
 ```text
 output\pdf\WinSW-Rclone-Emulation-Guide.pdf
 ```
-

@@ -15,8 +15,35 @@ The Google account is connected through the official `rclone config` login flow.
 | drive letter | setup wizard | `R:` |
 | cache folder | setup wizard | `C:\rclone-cache` |
 | cache size | setup wizard | `120G`, `200G`, `300G` |
+| manager settings | local `settings.json` | copied from `settings.example.json` |
 
 This setup is generic. It can be used for documents, backups, media, project files, large archives, or game libraries. Emulation-specific guidance is kept in a separate PDF so the main installer is not tied to any emulator.
+
+## Quick Install
+
+For the automatic install, download or clone the repository and run:
+
+```text
+Install-WinSW-Rclone.cmd
+```
+
+The launcher opens the PowerShell setup wizard as Administrator. The wizard downloads rclone and WinSW, checks WinFsp, asks for the remote, drive letter and cache settings, generates `RcloneService.xml`, installs the service, and starts the mount.
+
+After the first setup, use the manager menu for maintenance:
+
+```text
+Manage-WinSW-Rclone.cmd
+```
+
+The manager can verify the configuration, diagnose problems, start, stop or restart the service, update rclone or WinSW, open logs, edit local manager settings, and remove the service.
+
+The manager stores local preferences in:
+
+```text
+settings.json
+```
+
+That file is intentionally ignored by Git because it can contain personal paths. Use `settings.example.json` as the public template.
 
 ## Windows Mount Requirement
 
@@ -146,6 +173,24 @@ belongs to the Windows user running the setup wizard.
 
 If the service later runs under a different Windows account, it may not see the same `%APPDATA%`. The generated XML stores the expanded absolute path to avoid ambiguity.
 
+## Manager Checklist
+
+After installing, run:
+
+```text
+Manage-WinSW-Rclone.cmd
+```
+
+Then use:
+
+```text
+2 - Verify configuration
+3 - Diagnose problem
+11 - Open logs folder
+```
+
+Use start, stop and restart only when you intentionally want to change the service state.
+
 ## Verification Checklist
 
 After setup, verify:
@@ -196,6 +241,7 @@ Never publish:
 ```text
 rclone.conf
 RcloneService.xml
+settings.json
 logs
 downloads
 rclone binaries

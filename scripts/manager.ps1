@@ -65,6 +65,35 @@ function Get-ServiceExe {
     return Join-Path $Settings.ServiceDir "RcloneService.exe"
 }
 
+function Get-RcloneExe {
+    param([Parameter(Mandatory = $true)]$Settings)
+
+    $defaultPath = Join-Path $Settings.ServiceDir "rclone\rclone.exe"
+    if (Test-Path -LiteralPath $defaultPath) {
+        return $defaultPath
+    }
+
+    $serviceXml = Join-Path $Settings.ServiceDir "RcloneService.xml"
+    if (Test-Path -LiteralPath $serviceXml) {
+        try {
+            [xml]$xml = Get-Content -LiteralPath $serviceXml
+            if ($xml.service.executable -and (Test-Path -LiteralPath $xml.service.executable)) {
+                return $xml.service.executable
+            }
+        } catch {
+            Write-Host "Warning: could not read rclone path from service XML."
+        }
+    }
+
+    $matches = Get-ChildItem -LiteralPath $Settings.ServiceDir -Recurse -Filter "rclone.exe" -ErrorAction SilentlyContinue |
+        Select-Object -First 1
+    if ($matches) {
+        return $matches.FullName
+    }
+
+    return $defaultPath
+}
+
 function Invoke-ServiceExe {
     param(
         [Parameter(Mandatory = $true)]$Settings,
@@ -149,7 +178,8 @@ function Update-Rclone {
     param([Parameter(Mandatory = $true)]$Settings)
 
     $wasRunning = Stop-ManagedService -Settings $Settings
-    $rcloneDir = Join-Path $Settings.ServiceDir "rclone"
+    $currentRcloneExe = Get-RcloneExe -Settings $Settings
+    $rcloneDir = Split-Path -Parent $currentRcloneExe
     $rcloneExe = Join-Path $rcloneDir "rclone.exe"
     $downloadDir = Join-Path $Settings.ServiceDir "downloads"
     New-Item -ItemType Directory -Path $rcloneDir -Force | Out-Null
@@ -207,7 +237,7 @@ function Show-Status {
 
     $service = Get-Service -Name $Settings.ServiceName -ErrorAction SilentlyContinue
     $mountPath = "$($Settings.DriveLetter.TrimEnd(':')):\"
-    $rcloneExe = Join-Path $Settings.ServiceDir "rclone\rclone.exe"
+    $rcloneExe = Get-RcloneExe -Settings $Settings
     $winswExe = Get-ServiceExe -Settings $Settings
     $serviceXml = Join-Path $Settings.ServiceDir "RcloneService.xml"
 
@@ -227,6 +257,7 @@ function Show-Status {
     Write-Host "Service:        $(if ($service) { $service.Status } else { 'Not installed' })"
     Write-Host "Mount visible:  $(Test-Path -LiteralPath $mountPath) ($mountPath)"
     Write-Host "rclone.exe:     $(Test-Path -LiteralPath $rcloneExe)"
+    Write-Host "rclone path:    $rcloneExe"
     Write-Host "WinSW exe:      $(Test-Path -LiteralPath $winswExe)"
     Write-Host "Service XML:    $(Test-Path -LiteralPath $serviceXml)"
 }
